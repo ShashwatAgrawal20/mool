@@ -1,1 +1,5 @@
 [OSDEV BARE BONE](https://wiki.osdev.org/Bare_Bones)
+[Printing to Screen](https://wiki.osdev.org/Printing_To_Screen)
+[VGA Hardware](https://wiki.osdev.org/VGA_Hardware)
+[GDT Tutorial](https://wiki.osdev.org/GDT_Tutorial)
+[Global Descriptor Table](https://wiki.osdev.org/Global_Descriptor_Table)

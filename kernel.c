@@ -3,7 +3,7 @@
 #define SCREEN_HEIGHT 25
 
 volatile unsigned short *const video_memory = (unsigned short *)VIDEO_MEMORY;
-const unsigned char DEFAULT_COLOR = 0x0F;
+const unsigned char DEFAULT_COLOR = 0x70;
 
 unsigned int vga_index = 0;
 
@@ -17,7 +17,7 @@ void clear_screen(void) {
 
 void print_char(const char c) {
     if (c == '\n') {
-        unsigned int current_line = vga_index / SCREEN_WIDTH;
+        unsigned char current_line = vga_index / SCREEN_WIDTH;
         vga_index = (current_line + 1) * SCREEN_WIDTH;
     } else {
         video_memory[vga_index++] =
@@ -26,7 +26,7 @@ void print_char(const char c) {
 }
 
 void print_string(const char *str) {
-    for (int i = 0; str[i] != '\0'; ++i) {
+    for (unsigned int i = 0; str[i] != '\0'; ++i) {
         print_char(str[i]);
     }
 }
