@@ -2,7 +2,7 @@
 #define GDT_H
 
 struct gdt_entry_struct {
-    unsigned short limit;
+    unsigned short limit0;
     unsigned short base0;
     unsigned char base1;
     unsigned char access;
@@ -12,7 +12,7 @@ struct gdt_entry_struct {
 
 struct gdt_ptr_struct {
     unsigned short limit;
-    unsigned int base;
+    unsigned long base;
 } __attribute__((packed));
 
 #define _GDT_ACCESS_PRESENT 0x80    // (P) Present bit
@@ -27,13 +27,14 @@ struct gdt_ptr_struct {
 #define _GDT_GRAN_32BIT_MODE 0x40   // (D/B) size flag. 16&32 bit protected mode
 #define _GDT_GRAN_LONG_MODE 0x20    // (L)Long-mode code flag. 1 for 64-bit.
 
-#define GDT_ENTRY_INIT(base, limit, access, gran)                              \
-    {.limit = (limit) & 0xFFFF,                                                \
-     .base0 = (base) & 0xFFFF,                                                 \
-     .base1 = ((base) >> 16) & 0xFF,                                           \
-     .access = (access),                                                       \
-     .granularity = ((gran) & 0xF0) | (((limit) >> 16) & 0x0F),                \
-     .base2 = ((base) >> 24) & 0xFF}
+#define GDT_ENTRY_INIT(base, limit, access_byte, gran)                         \
+    (struct gdt_entry_struct){.limit0 = (limit) & 0xFFFF,                      \
+                              .base0 = (base) & 0xFFFF,                        \
+                              .base1 = ((base) >> 16) & 0xFF,                  \
+                              .access = (access_byte),                         \
+                              .granularity =                                   \
+                                  ((gran) & 0xF0) | (((limit) >> 16) & 0x0F),  \
+                              .base2 = ((base) >> 24) & 0xFF}
 
 void gdt_init(void);
 

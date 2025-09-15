@@ -1,3 +1,5 @@
+#include "gdt.h"
+
 #define VIDEO_MEMORY 0xB8000
 #define SCREEN_WIDTH 80
 #define SCREEN_HEIGHT 25
@@ -32,6 +34,7 @@ void print_string(const char *str) {
 }
 
 void kernel_main(void) {
+    gdt_init();
     clear_screen();
 
     print_string("  Hello from the Kernel!\n\n");

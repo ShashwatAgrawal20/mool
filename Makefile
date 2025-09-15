@@ -10,7 +10,7 @@ LD=ld
 # -O2: Optimization level.
 CFLAGS=-m32 -ffreestanding -nostdlib -fno-builtin -fno-pie -O2 -Wall -Wextra
 
-OBJS=boot.o kernel.o
+OBJS=boot.o kernel.o gdt.o gdts.o
 
 TARGET=mykernel.bin
 
@@ -19,10 +19,10 @@ all: $(TARGET)
 $(TARGET): $(OBJS) linker.ld
 	$(LD) -m elf_i386 -T linker.ld -o $(TARGET) $(OBJS)
 
-boot.o: boot.s
+%.o: %.s
 	$(CC) $(CFLAGS) -c $< -o $@
 
-kernel.o: kernel.c
+%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run: $(TARGET)
