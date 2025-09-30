@@ -1,17 +1,11 @@
 CC=gcc
 LD=ld
+NASM=nasm
 
-# Set compiler and assembler flags
-# -m32: Compile for a 32-bit architecture.
-# -ffreestanding: Don't assume a standard library is present.
-# -nostdlib: Don't link against the standard C library.
-# -fno-builtin: Don't use built-in functions that might rely on a C library.
-# -fno-pie: Don't generate position-independent code.
-# -O2: Optimization level.
-CFLAGS=-m32 -ffreestanding -nostdlib -fno-builtin -fno-pie -O2 -Wall -Wextra
+CFLAGS=-m32 -ffreestanding -nostdlib -fno-builtin -fno-pie -Wall -Wextra -O2
+NASMFLAGS=-f elf32
 
 OBJS=boot.o kernel.o gdt.o gdts.o
-
 TARGET=mykernel.bin
 
 all: $(TARGET)
@@ -19,14 +13,17 @@ all: $(TARGET)
 $(TARGET): $(OBJS) linker.ld
 	$(LD) -m elf_i386 -T linker.ld -o $(TARGET) $(OBJS)
 
-%.o: %.s
-	$(CC) $(CFLAGS) -c $< -o $@
+%.o: %.nasm
+	$(NASM) $(NASMFLAGS) $< -o $@
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 run: $(TARGET)
 	qemu-system-i386 -kernel $(TARGET)
+
+debug: $(TARGET)
+	qemu-system-i386 -kernel $(TARGET) -S -s
 
 clean:
 	rm -f $(TARGET) $(OBJS)
